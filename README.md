@@ -30,7 +30,7 @@ Create your database and database user
 ### From a GIT repository
 
 * open terminal and navigate to the folder where you want the script to be installed
-* run command `git clone https://github.com/milenmk/Simple-Password-Manager.git`
+* run command `git clone https://github.com/milenmk/Laravel-Filament-Password-Manager.git`
 
 ### Final steps
 
@@ -51,7 +51,7 @@ Create your database and database user
 This software is released under the terms of the GNU General Public License as published by the Free Software
 Foundation; either version 3 of the License, or (at your option) any later version (GPL-3+).
 
-See the [COPYING](https://github.com/milenmk/Simple-Password-Manager/blob/main/LICENSE) file for a full copy of the
+See the [LICENSE](https://github.com/milenmk/Laravel-Filament-Password-Manager/blob/main/LICENSE) file for a full copy of the
 license.
 
 ## DISCLAIMER

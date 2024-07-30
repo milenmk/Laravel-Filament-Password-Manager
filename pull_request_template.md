@@ -21,8 +21,8 @@ Please include a summary of the change or which issue is fixed.
 - [ ] I have made corresponding changes to the documentation where needed
 - [ ] My changes generate no new warnings
 - [ ] I have checked my code and corrected any misspellings
-- [ ] I have updated `develop` and merged to my branch before submitting pull request
-- [ ] My pull request generate no conflicts with `develop` branch
+- [ ] I have updated `main` and merged to my branch before submitting pull request
+- [ ] My pull request generate no conflicts with `main` branch
 - [ ] I requested code review from other team members
 
 ## Frontend checklist:
