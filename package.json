@@ -19,7 +19,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "autoprefixer": "^10.4.19",
+        "autoprefixer": "^10.4.20",
         "flag-icon-css": "^4.1.7",
         "font-awesome": "^4.7.0",
         "postcss": "^8.4.38",
