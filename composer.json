@@ -51,6 +51,10 @@
             "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
+            "@php artisan ide-helper:eloquent",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta",
+            "@php artisan ide-helper:models",
             "@php artisan cache:clear",
             "@php artisan config:clear",
             "@php artisan route:clear",
