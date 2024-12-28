@@ -18,6 +18,7 @@ Simple password manager written on Laravel and Filament
     * mysqli
     * curl
     * mbstring
+    * intl
 
 * MySQL Server 8 OR MariaDB 10
 * Apache > 2.4
@@ -26,15 +27,14 @@ Simple password manager written on Laravel and Filament
 
 ## Installation
 
-1. From a ZIP file (using a GUI interface)
+### From a ZIP file (using a GUI interface)
    * Download .zip file from GitHub
    * Unzip it at folder at your choice
 
-2. From a GIT repository
+### From a GIT repository
    * open terminal and navigate to the folder where you want the script to be installed
    * run command `git clone https://github.com/milenmk/Laravel-Filament-Password-Manager.git`
 
-3. Final steps
    * Using your terminal, navigate to the folder of the app
    * rename .env.example to .env
    * Fill the database data (server, port, database, user and password)
