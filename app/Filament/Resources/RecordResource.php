@@ -6,9 +6,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecordResource\Pages;
 use App\Models\Record;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -18,6 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class RecordResource extends Resource
 {
@@ -45,7 +48,14 @@ class RecordResource extends Resource
                     ->required(),
 
                 TextInput::make('password')
-                    ->required(),
+                    ->required()
+                    ->suffixAction(fn (?string $state, Set $set): Action =>
+                    Action::make('generate')
+                        ->label('Generate')
+                        ->visible(fn () => ! $state)
+                        ->button()
+                        ->action(fn() => $set('password', Str::password(16))),
+                    ),
 
                 Select::make('domain_id')
                     ->relationship('domain', 'name')
