@@ -15,6 +15,7 @@
         "ext-mysqli": "*",
         "ext-pdo": "*",
         "ext-zip": "*",
+        "ext-intl": "*",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9"
