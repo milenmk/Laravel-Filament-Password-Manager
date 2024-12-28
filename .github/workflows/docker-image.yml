@@ -37,9 +37,9 @@ jobs:
       run: |
         docker-compose build
 
-    - name: Check PHP version
+    - name: Start containers
       run: |
-        docker-compose exec app php -v
+        docker-compose up -d
 
     - name: Generate application key
       run: |
@@ -56,10 +56,6 @@ jobs:
     - name: Run migrations
       run: |
         docker-compose exec app php artisan migrate --force
-
-    - name: Start containers
-      run: |
-        docker-compose up -d
 
     - name: Test if app is running
       run: |
