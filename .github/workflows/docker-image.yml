@@ -37,10 +37,6 @@ jobs:
       run: |
         docker-compose build
 
-    - name: Start containers
-      run: |
-        docker-compose up -d
-
     - name: Generate application key
       run: |
         docker-compose exec app php artisan key:generate
@@ -59,6 +55,7 @@ jobs:
 
     - name: Test if app is running
       run: |
+        docker-compose up -d
         sleep 10  # Wait for the app to start
         curl --fail http://localhost:8000  # Test if the app responds
 
