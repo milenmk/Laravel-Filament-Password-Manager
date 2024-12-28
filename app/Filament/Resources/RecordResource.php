@@ -62,11 +62,14 @@ class RecordResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('url'),
+                TextColumn::make('url')
+                    ->icon('heroicon-c-link')
+                    ->html()
+                    ->getStateUsing(fn ($record) => '<a href="' . $record->url . '" target="_blank" rel="noopener noreferrer">' . $record->url . '</a>'),
 
-                TextColumn::make('username'),
+                TextColumn::make('username')->copyable()->icon('heroicon-s-document-duplicate'),
 
-                TextColumn::make('password'),
+                TextColumn::make('password')->copyable()->icon('heroicon-s-document-duplicate'),
 
                 TextColumn::make('domain.name')
                     ->searchable()
@@ -83,7 +86,9 @@ class RecordResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordAction(null)
+            ->recordUrl(null);
     }
 
     public static function getPages(): array

@@ -2,6 +2,12 @@
 
 Simple password manager written on Laravel and Filament
 
+![Screenshot](/public/images/screenshots/domains.png?raw=true)
+
+![Screenshot](/public/images/screenshots/records.png?raw=true)
+
+![Screenshot](/public/images/screenshots/records_type.png?raw=true)
+
 ## Requirements
 
 * PHP > 8.2

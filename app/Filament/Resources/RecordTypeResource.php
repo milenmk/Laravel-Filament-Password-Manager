@@ -62,7 +62,9 @@ class RecordTypeResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->recordAction(null)
+            ->recordUrl(null);
     }
 
     public static function getPages(): array

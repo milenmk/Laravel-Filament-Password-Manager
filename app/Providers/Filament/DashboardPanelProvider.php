@@ -59,7 +59,7 @@ class DashboardPanelProvider extends PanelProvider
             ])
             ->spa()
             ->brandLogo(fn() => view('filament.logo'))
-            ->favicon(asset('storage/images/favicon.png'))
+            ->favicon(asset('images/favicon.png'))
             ->sidebarCollapsibleOnDesktop()
             ->defaultThemeMode(ThemeMode::Light);
     }
