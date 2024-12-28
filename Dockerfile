@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libcurl4-openssl-dev \
     libmariadb-dev \
+    libonig-dev \
     git \
     unzip \
     npm
