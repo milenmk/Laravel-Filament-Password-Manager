@@ -20,7 +20,7 @@ RUN a2enmod rewrite
 
 # Install required PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd pdo pdo_mysql zip mysqli curl mbstring
+RUN docker-php-ext-install gd pdo pdo_mysql zip mysqli curl mbstring intl
 
 # Configure Apache DocumentRoot to point to Laravel's public directory
 # and update Apache configuration files

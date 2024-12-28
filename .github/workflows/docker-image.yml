@@ -31,11 +31,15 @@ jobs:
       run: |
         curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         chmod +x /usr/local/bin/docker-compose
-        docker-compose --version      
+        docker-compose --version
 
     - name: Build Docker image
       run: |
         docker-compose build
+
+    - name: Check PHP version
+      run: |
+        docker-compose exec app php -v
 
     - name: Generate application key
       run: |
@@ -53,13 +57,16 @@ jobs:
       run: |
         docker-compose exec app php artisan migrate --force
 
-    - name: Test if app is running
+    - name: Start containers
       run: |
         docker-compose up -d
+
+    - name: Test if app is running
+      run: |
         sleep 10  # Wait for the app to start
         curl --fail http://localhost:8000  # Test if the app responds
 
     - name: Clean up
       run: |
         docker-compose down
-      
+
