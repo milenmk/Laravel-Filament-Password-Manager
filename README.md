@@ -26,31 +26,55 @@ Simple password manager written on Laravel and Filament
 
 ## Installation
 
-Create your database and database user
+1. From a ZIP file (using a GUI interface)
+   * Download .zip file from GitHub
+   * Unzip it at folder at your choice
 
-### From the ZIP file and GUI interface
+2. From a GIT repository
+   * open terminal and navigate to the folder where you want the script to be installed
+   * run command `git clone https://github.com/milenmk/Laravel-Filament-Password-Manager.git`
 
-* Download .zip file from GitHub
-* Unzip it at folder at your choice
+3. Final steps
+   * Using your terminal, navigate to the folder of the app
+   * rename .env.example to .env
+   * Fill the database data (server, port, database, user and password)
+   * Change the `APP_URL` to the actual value
+   * Optional: change the `APP_NAME`
 
-### From a GIT repository
+### If you are using Docker:
 
-* open terminal and navigate to the folder where you want the script to be installed
-* run command `git clone https://github.com/milenmk/Laravel-Filament-Password-Manager.git`
+Run following commands
 
-### Final steps
+    docker-compose build
+    docker-compose exec app php artisan key:generate
+    docker-compose exec app composer install
+    docker-compose exec app npm install
+    docker-compose exec app php artisan migrate
 
-* Using your terminal, navigate to the folder of the app
-* rename .env.example to .env
-* Fill the database data (server, port, database, user and password)
-* Change the `APP_URL` to the actual value
-* Optional: change the `APP_NAME`
+After completing the above setup, you can start the application with:
 
-* Run following commands
-    * php artisan key:generate
-    * composer install
-    * npm install
-    * php artisan migrate
+    docker-compose up -d
+
+The application should now be accessible at http://localhost:8000
+
+### If you already have Apache/PHP/Mysql installed
+
+Create your database and database user with the credentials specified in the .env file. Then run following commands:
+
+    php artisan key:generate
+    composer install
+    npm install
+    php artisan migrate
+
+After completing the above setup, you can start the application with:
+
+    php artisan serve
+
+The application should now be accessible at http://localhost:8080
+
+### As an alternative
+
+You can use [Laragon](https://laragon.org/download/), an application similar to XAMPP but more powerful.
 
 ## LICENSE
 
