@@ -41,24 +41,6 @@ Simple password manager written on Laravel and Filament
    * Change the `APP_URL` to the actual value
    * Optional: change the `APP_NAME`
 
-### If you are using Docker:
-
-Run following commands
-
-    docker-compose build
-    docker-compose exec app php artisan key:generate
-    docker-compose exec app composer install
-    docker-compose exec app npm install
-    docker-compose exec app php artisan migrate
-
-After completing the above setup, you can start the application with:
-
-    docker-compose up -d
-
-The application should now be accessible at http://localhost:8000
-
-### If you already have Apache/PHP/Mysql installed
-
 Create your database and database user with the credentials specified in the .env file. Then run following commands:
 
     php artisan key:generate
