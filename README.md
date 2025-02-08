@@ -8,6 +8,8 @@ Simple password manager written on Laravel and Filament
 
 ![Screenshot](/public/images/screenshots/records_type.png?raw=true)
 
+## DEMO: https://passman.minkov.dev/
+
 ## Requirements
 
 * PHP > 8.2
