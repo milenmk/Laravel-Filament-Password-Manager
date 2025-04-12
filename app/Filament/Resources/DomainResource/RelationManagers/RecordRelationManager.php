@@ -2,12 +2,15 @@
 
 namespace App\Filament\Resources\DomainResource\RelationManagers;
 
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class RecordRelationManager extends RelationManager
 {
@@ -31,7 +34,14 @@ class RecordRelationManager extends RelationManager
                     ->required(),
 
                 TextInput::make('password')
-                    ->required(),
+                    ->required()
+                    ->suffixAction(fn (?string $state, Set $set): Action =>
+                    Action::make('generate')
+                        ->label('Generate')
+                        ->visible(fn () => ! $state)
+                        ->button()
+                        ->action(fn() => $set('password', Str::password(16))),
+                    ),
             ]);
     }
 
