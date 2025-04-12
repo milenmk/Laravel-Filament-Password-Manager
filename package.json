@@ -3,18 +3,32 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "format-app": "npx prettier --write app/",
+        "format-resources": "npx prettier --write resources/",
+        "prepare": "husky install"
     },
     "devDependencies": {
+        "@prettier/plugin-php": "^0.22.4",
         "@tailwindcss/postcss": "^4.1.3",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
-        "laravel-vite-plugin": "^1.0",
+        "husky": "^8.0.0",
+        "laravel-vite-plugin": "^1.2.0",
+        "lint-staged": "^15.5.1",
         "postcss": "^8.4.47",
+        "prettier": "^3.5.3",
+        "prettier-plugin-blade": "^2.1.21",
+        "prettier-plugin-tailwindcss": "^0.6.11",
         "tailwindcss": "^4.1.3",
-        "vite": "^5.0"
+        "vite": "^6.0.11"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.3"
+    },
+    "lint-staged": {
+        "**/*.php*": [
+            "vendor/bin/duster fix"
+        ]
     }
 }

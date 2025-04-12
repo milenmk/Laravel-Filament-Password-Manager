@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers\Filament;
 
 use App\Filament\Resources\DomainResource\Pages\ListDomains;
@@ -20,10 +22,8 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class DashboardPanelProvider extends PanelProvider
 {
-
     public function panel(Panel $panel): Panel
     {
-
         return $panel
             ->default()
             ->id('dashboard')
@@ -31,16 +31,16 @@ class DashboardPanelProvider extends PanelProvider
             ->login()
             ->registration()
             ->colors([
-                'primary'   => Color::Blue,
+                'primary' => Color::Blue,
                 'secondary' => Color::Indigo,
-                'info'      => Color::Cyan,
-                'success'   => Color::Green,
-                'warning'   => Color::Amber,
-                'danger'    => Color::Red,
+                'info' => Color::Cyan,
+                'success' => Color::Green,
+                'warning' => Color::Amber,
+                'danger' => Color::Red,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
-            ->pages([ListDomains::class,])
+            ->pages([ListDomains::class])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([])
             ->middleware([
@@ -54,14 +54,11 @@ class DashboardPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->authMiddleware([
-                Authenticate::class,
-            ])
+            ->authMiddleware([Authenticate::class])
             ->spa()
             ->brandLogo(fn() => view('filament.logo'))
             ->favicon(asset('images/favicon.png'))
             ->sidebarCollapsibleOnDesktop()
             ->defaultThemeMode(ThemeMode::Light);
     }
-
 }

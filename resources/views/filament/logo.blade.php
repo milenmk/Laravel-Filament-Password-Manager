@@ -1,6 +1,8 @@
 <div class="flex gap-2">
-    <img class="w-8 ltr:-ml-1 rtl:-mr-1 inline" src="{{ asset('images/logo.png') }}" alt="{{ __('image') }}" />
-    <span class="text-2xl ml-1.5 font-semibold align-middle md:inline dark:text-white-light transition-all duration-300">
-    {{ __('PassMan') }}
-</span>
+    <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" src="{{ asset('images/logo.png') }}" alt="{{ __('image') }}" />
+    <span
+        class="dark:text-white-light ml-1.5 align-middle text-2xl font-semibold transition-all duration-300 md:inline"
+    >
+        {{ __('PassMan') }}
+    </span>
 </div>

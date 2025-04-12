@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Filament\Resources\RecordTypeResource\Pages;
 
@@ -9,15 +9,10 @@ use Filament\Resources\Pages\CreateRecord;
 
 class CreateRecordType extends CreateRecord
 {
-
     protected static string $resource = RecordTypeResource::class;
 
     protected function getHeaderActions(): array
     {
-
-        return [
-
-        ];
+        return [];
     }
-
 }
