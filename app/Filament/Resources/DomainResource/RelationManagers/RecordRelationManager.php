@@ -10,6 +10,7 @@ use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 class RecordRelationManager extends RelationManager
@@ -41,7 +42,15 @@ class RecordRelationManager extends RelationManager
                         ->visible(fn () => ! $state)
                         ->button()
                         ->action(fn() => $set('password', Str::password(16))),
-                    ),
+                    )
+                    ->formatStateUsing(function ($state) {
+                        if ($state) {
+                            return Crypt::decryptString($state);
+                        }
+                        return null;
+                    })
+                    ->dehydrateStateUsing(fn ($state) => Crypt::encryptString($state))
+                    ->dehydrated(fn ($state) => filled($state)),
             ]);
     }
 
@@ -53,7 +62,7 @@ class RecordRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('recordType.name'),
                 Tables\Columns\TextColumn::make('url'),
                 Tables\Columns\TextColumn::make('username'),
-                Tables\Columns\TextColumn::make('password'),
+                Tables\Columns\TextColumn::make('password')->formatStateUsing(fn (string $state): string => Crypt::decryptString($state)),
             ])
             ->filters([
                 //

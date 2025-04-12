@@ -20,6 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 class RecordResource extends Resource
@@ -55,7 +56,15 @@ class RecordResource extends Resource
                         ->visible(fn () => ! $state)
                         ->button()
                         ->action(fn() => $set('password', Str::password(16))),
-                    ),
+                    )
+                    ->formatStateUsing(function ($state) {
+                        if ($state) {
+                            return Crypt::decryptString($state);
+                        }
+                        return null;
+                    })
+                    ->dehydrateStateUsing(fn ($state) => Crypt::encryptString($state))
+                    ->dehydrated(fn ($state) => filled($state)),
 
                 Select::make('domain_id')
                     ->relationship('domain', 'name')
@@ -79,7 +88,10 @@ class RecordResource extends Resource
 
                 TextColumn::make('username')->copyable()->icon('heroicon-s-document-duplicate'),
 
-                TextColumn::make('password')->copyable()->icon('heroicon-s-document-duplicate'),
+                TextColumn::make('password')
+                    ->copyable()
+                    ->icon('heroicon-s-document-duplicate')
+                    ->formatStateUsing(fn (string $state): string => Crypt::decryptString($state)),
 
                 TextColumn::make('domain.name')
                     ->searchable()
