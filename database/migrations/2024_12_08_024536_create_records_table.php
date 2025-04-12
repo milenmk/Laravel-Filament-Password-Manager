@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->foreignIdFor(RecordType::class)->constrained('record_types')->cascadeOnDelete();
             $table->string('url');
             $table->string('username');
-            $table->string('password');
+            $table->text('password');
             $table->foreignIdFor(Domain::class)->constrained('domains')->cascadeOnDelete();
             $table->timestamps();
         });
