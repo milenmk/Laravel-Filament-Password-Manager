@@ -1,20 +1,21 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RecordResource\Pages;
+use App\Filament\Resources\RecordResource\Pages\CreateRecord;
+use App\Filament\Resources\RecordResource\Pages\EditRecord;
+use App\Filament\Resources\RecordResource\Pages\ListRecords;
 use App\Models\Record;
+use App\Services\AuditLogService;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -25,7 +26,6 @@ use Illuminate\Support\Str;
 
 class RecordResource extends Resource
 {
-
     protected static ?string $model = Record::class;
 
     protected static ?string $slug = 'records';
@@ -34,47 +34,50 @@ class RecordResource extends Resource
 
     public static function form(Form $form): Form
     {
+        return $form->schema([
+            Select::make('record_type_id')
+                ->relationship('recordType', 'name')
+                ->required(),
 
-        return $form
-            ->schema([
-                Select::make('record_type_id')
-                    ->relationship('recordType', 'name')
-                    ->required(),
+            TextInput::make('url')
+                ->required()
+                ->url(),
 
-                TextInput::make('url')
-                    ->required()
-                    ->url(),
+            TextInput::make('username')->required(),
 
-                TextInput::make('username')
-                    ->required(),
-
-                TextInput::make('password')
-                    ->required()
-                    ->suffixAction(fn (?string $state, Set $set): Action =>
-                    Action::make('generate')
+            TextInput::make('password')
+                ->password()
+                ->required()
+                ->suffixAction(
+                    fn(?string $state, Set $set): Action => Action::make('generate')
                         ->label('Generate')
-                        ->visible(fn () => ! $state)
                         ->button()
                         ->action(fn() => $set('password', Str::password(16))),
-                    )
-                    ->formatStateUsing(function ($state) {
-                        if ($state) {
-                            return Crypt::decryptString($state);
-                        }
-                        return null;
-                    })
-                    ->dehydrateStateUsing(fn ($state) => Crypt::encryptString($state))
-                    ->dehydrated(fn ($state) => filled($state)),
+                )
+                ->formatStateUsing(function ($state) {
+                    if ($state) {
+                        return Crypt::decryptString($state);
+                    }
+                    return null;
+                })
+                ->dehydrateStateUsing(fn($state) => Crypt::encryptString($state))
+                ->dehydrated(fn($state) => filled($state)),
 
-                Select::make('domain_id')
-                    ->relationship('domain', 'name')
-                    ->required(),
-            ]);
+            Select::make('domain_id')
+                ->relationship('domain', 'name')
+                ->required(),
+
+            TextInput::make('password_expiry_days')
+                ->numeric()
+                ->minValue(1)
+                ->default(90)
+                ->required()
+                ->helperText('Number of days until password expires'),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
                 TextColumn::make('recordType.name')
@@ -84,60 +87,94 @@ class RecordResource extends Resource
                 TextColumn::make('url')
                     ->icon('heroicon-c-link')
                     ->html()
-                    ->getStateUsing(fn ($record) => '<a href="' . $record->url . '" target="_blank" rel="noopener noreferrer">' . $record->url . '</a>'),
+                    ->getStateUsing(
+                        fn($record) => '<a href="' .
+                            $record->url .
+                            '" target="_blank" rel="noopener noreferrer">' .
+                            $record->url .
+                            '</a>',
+                    ),
 
-                TextColumn::make('username')->copyable()->icon('heroicon-s-document-duplicate'),
+                TextColumn::make('username')
+                    ->copyable()
+                    ->icon('heroicon-s-document-duplicate'),
 
                 TextColumn::make('password')
                     ->copyable()
                     ->icon('heroicon-s-document-duplicate')
-                    ->formatStateUsing(fn (string $state): string => Crypt::decryptString($state)),
+                    ->formatStateUsing(function (string $state, Record $record): string {
+                        AuditLogService::log('view_password', $record);
+                        return Crypt::decryptString($state);
+                    }),
 
                 TextColumn::make('domain.name')
                     ->searchable()
                     ->sortable(),
+
+                TextColumn::make('password_status')
+                    ->label('Password Status')
+                    ->getStateUsing(function (Record $record) {
+                        if ($record->isPasswordExpired()) {
+                            return 'Expired';
+                        }
+                        if ($record->isPasswordNearingExpiry()) {
+                            return 'Expires in ' . $record->daysUntilExpiry() . ' days';
+                        }
+                        return 'Valid';
+                    })
+                    ->badge()
+                    ->color(function (Record $record) {
+                        if ($record->isPasswordExpired()) {
+                            return 'danger';
+                        }
+                        if ($record->isPasswordNearingExpiry()) {
+                            return 'warning';
+                        }
+                        return 'success';
+                    }),
+
+                TextColumn::make('password_last_changed')
+                    ->label('Last Changed')
+                    ->date(),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                EditAction::make()->before(function (Record $record): void {
+                    AuditLogService::log('edit', $record);
+                }),
+                DeleteAction::make()->before(function (Record $record): void {
+                    AuditLogService::log('delete', $record);
+                }),
             ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ])
+            ->bulkActions([])
             ->recordAction(null)
-            ->recordUrl(null);
+            ->recordUrl(null)
+            ->defaultSort('created_at', 'desc')
+            ->persistSortInSession()
+            ->striped();
     }
 
     public static function getPages(): array
     {
-
         return [
-            'index' => Pages\ListRecords::route('/'),
-            //'create' => Pages\CreateRecord::route('/create'),
-            //'edit'   => Pages\EditRecord::route('/{record}/edit'),
+            'index' => ListRecords::route('/'),
+            'create' => CreateRecord::route('/create'),
+            'edit' => EditRecord::route('/{record}/edit'),
         ];
     }
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
-
         return parent::getGlobalSearchEloquentQuery()->with(['recordType', 'domain']);
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-
         return ['recordType.name', 'domain.name'];
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
-
         $details = [];
 
         if ($record->recordType) {
@@ -153,20 +190,16 @@ class RecordResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-
-        return (string)(static::getModel()::count());
+        return (string) static::getModel()::count();
     }
 
     public static function getModelLabel(): string
     {
-
         return __('Record');
     }
 
     public static function getPluralModelLabel(): string
     {
-
         return __('Records');
     }
-
 }

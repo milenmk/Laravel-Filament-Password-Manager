@@ -1,10 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DomainResource\Pages;
+use App\Filament\Resources\DomainResource\Pages\EditDomain;
+use App\Filament\Resources\DomainResource\Pages\ListDomains;
+use App\Filament\Resources\DomainResource\Pages\ViewDomain;
 use App\Filament\Resources\DomainResource\RelationManagers\RecordRelationManager;
 use App\Models\Domain;
 use Filament\Forms\Components\TextInput;
@@ -23,7 +26,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class DomainResource extends Resource
 {
-
     protected static ?string $model = Domain::class;
 
     protected static ?string $slug = 'domains';
@@ -34,97 +36,72 @@ class DomainResource extends Resource
 
     public static function form(Form $form): Form
     {
-
-        return $form
-            ->schema([
-                TextInput::make('name')
-                    ->required(),
-            ]);
+        return $form->schema([TextInput::make('name')->required()]);
     }
 
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Created Date')->date()
+                    ->label('Created Date')
+                    ->date()
                     ->sortable(),
                 TextColumn::make('updated_at')
-                    ->label('Last Modified Date')->date()
+                    ->label('Last Modified Date')
+                    ->date()
                     ->sortable(),
             ])
             ->filters([])
-            ->actions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->actions([ViewAction::make(), EditAction::make(), DeleteAction::make()])
+            ->bulkActions([BulkActionGroup::make([DeleteBulkAction::make()])]);
     }
 
     public static function getPages(): array
     {
-
         return [
-            'index' => Pages\ListDomains::route('/'),
+            'index' => ListDomains::route('/'),
             //'create' => Pages\CreateDomain::route('/create'),
-            'view'  => Pages\ViewDomain::route('/{record}/view'),
-            'edit'  => Pages\EditDomain::route('/{record}/edit'),
+            'view' => ViewDomain::route('/{record}/view'),
+            'edit' => EditDomain::route('/{record}/edit'),
         ];
     }
 
     public static function infolist(Infolist $infolist): Infolist
     {
-
-        return $infolist->schema([
-            Group::make()->schema([]),
-        ]);
+        return $infolist->schema([Group::make()->schema([])]);
     }
 
     public static function getGlobalSearchEloquentQuery(): Builder
     {
-
         return parent::getGlobalSearchEloquentQuery()->with(['user']);
     }
 
     public static function getGloballySearchableAttributes(): array
     {
-
         return ['name'];
     }
 
     public static function getNavigationBadge(): ?string
     {
-
-        return (string)(static::getModel()::count());
+        return (string) static::getModel()::count();
     }
 
     public static function getModelLabel(): string
     {
-
         return __('Domain');
     }
 
     public static function getPluralModelLabel(): string
     {
-
         return __('Domains');
     }
 
     public static function getRelations(): array
     {
-
-        return [
-            RecordRelationManager::class,
-        ];
+        return [RecordRelationManager::class];
     }
-
 }

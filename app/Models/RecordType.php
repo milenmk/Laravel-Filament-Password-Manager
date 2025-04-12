@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -14,18 +14,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[ScopedBy(UserScope::class)]
 class RecordType extends Model
 {
-
     use HasFactory;
     use UserTrait;
 
-    protected $fillable = [
-        'name',
-        'user_id',
-    ];
+    protected $fillable = ['name', 'user_id'];
 
     public function user(): BelongsTo
     {
-
         return $this->belongsTo(User::class);
     }
 
@@ -36,11 +31,9 @@ class RecordType extends Model
      */
     protected function casts(): array
     {
-
         return [
             'created_at' => 'date',
             'updated_at' => 'date',
         ];
     }
-
 }

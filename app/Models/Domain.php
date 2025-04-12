@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace App\Models;
 
@@ -15,24 +15,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[ScopedBy(UserScope::class)]
 class Domain extends Model
 {
-
     use HasFactory;
     use UserTrait;
 
-    protected $fillable = [
-        'name',
-        'user_id',
-    ];
+    protected $fillable = ['name', 'user_id'];
 
     public function user(): BelongsTo
     {
-
         return $this->belongsTo(User::class);
     }
 
     public function records(): HasMany
     {
-
         return $this->hasMany(Record::class)->with('domain');
     }
 
@@ -43,11 +37,9 @@ class Domain extends Model
      */
     protected function casts(): array
     {
-
         return [
             'created_at' => 'date',
             'updated_at' => 'date',
         ];
     }
-
 }
